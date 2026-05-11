@@ -160,15 +160,16 @@ select option{background:#1a1028;}
       <button id="c-slab" onclick="setCompType('slab')"><i class="ti ti-certificate" style="font-size:14px;"></i> Graded slab</button>
     </div>
 
-    <div class="fld"><label>Card name *</label><input id="c-name" type="text" placeholder="e.g. Charizard Holo, Pikachu VMAX" onkeydown="if(event.key==='Enter')doComp()"></div>
+    <div class="grid2">
+      <div class="fld"><label>Card name *</label><input id="c-name" type="text" placeholder="e.g. Charizard Holo" onkeydown="if(event.key==='Enter')doComp()"></div>
+      <div class="fld"><label>Card # <span style="color:var(--red2);font-size:9px;letter-spacing:.05em;">(must include #)</span></label><input id="c-num" type="text" placeholder="e.g. #191" onkeydown="if(event.key==='Enter')doComp()"></div>
+    </div>
 
     <!-- RAW fields -->
     <div id="c-raw-fields">
       <div class="grid2">
         <div class="fld"><label>Set (optional)</label><input id="c-set" type="text" placeholder="e.g. Base Set, Evolving Skies"></div>
-        <div class="fld"><label>Card number *</label><input id="c-num" type="text" placeholder="e.g. 191" onkeydown="if(event.key==='Enter')doComp()">
-          <p class="hint">Numbers only — no # symbol</p>
-        </div>
+  
       </div>
       <div class="fld"><label>Condition</label>
         <select id="c-cond">
@@ -341,9 +342,9 @@ function doComp(){
 
   if(COMP_TYPE==='raw'){
     set  = E('c-set').value.trim();
-    num  = E('c-num').value.trim();
+    num  = E('c-num').value.trim().replace('#','');
     cond = E('c-cond').value;
-    if(!num){ alert('Please enter the card number.'); return; }
+
   } else {
     set     = E('c-set-slab').value.trim();
     company = E('c-company').value;
