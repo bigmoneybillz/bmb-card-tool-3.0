@@ -90,13 +90,29 @@ exports.handler = async function(event) {
     const ebayMP   = prices.ebay?.MODERATELY_PLACED || {};
     const ebayHP   = prices.ebay?.HEAVILY_PLAYED || {};
     const ebayDMG  = prices.ebay?.DAMAGED || {};
-    const ebayPSA10 = prices.ebay?.PSA_10  || {};
-    const ebayPSA9  = prices.ebay?.PSA_9   || {};
-    const ebayPSA8  = prices.ebay?.PSA_8   || {};
+    // PSA grades 1-10
+    const ebayPSA10 = prices.ebay?.PSA_10 || {};
+    const ebayPSA9  = prices.ebay?.PSA_9  || {};
+    const ebayPSA8  = prices.ebay?.PSA_8  || {};
+    const ebayPSA7  = prices.ebay?.PSA_7  || {};
+    const ebayPSA6  = prices.ebay?.PSA_6  || {};
+    const ebayPSA5  = prices.ebay?.PSA_5  || {};
+    const ebayPSA4  = prices.ebay?.PSA_4  || {};
+    const ebayPSA3  = prices.ebay?.PSA_3  || {};
+    const ebayPSA2  = prices.ebay?.PSA_2  || {};
+    const ebayPSA1  = prices.ebay?.PSA_1  || {};
+    // BGS grades
+    const ebayBGS10 = prices.ebay?.BGS_10 || {};
     const ebayBGS95 = prices.ebay?.BGS_9_5 || {};
-    const ebayBGS9  = prices.ebay?.BGS_9   || {};
-    const ebayCGC10 = prices.ebay?.CGC_10  || {};
+    const ebayBGS9  = prices.ebay?.BGS_9  || {};
+    const ebayBGS85 = prices.ebay?.BGS_8_5 || {};
+    const ebayBGS8  = prices.ebay?.BGS_8  || {};
+    // CGC grades
+    const ebayCGC10 = prices.ebay?.CGC_10 || {};
     const ebayCGC95 = prices.ebay?.CGC_9_5 || {};
+    const ebayCGC9  = prices.ebay?.CGC_9  || {};
+    const ebayCGC85 = prices.ebay?.CGC_8_5 || {};
+    const ebayCGC8  = prices.ebay?.CGC_8  || {};
 
     const nmAvg = ebayNM.avg || tcgNM.avg || 0;
     const avg30 = ebayNM.avg30d || tcgNM.avg30d || nmAvg;
@@ -123,7 +139,13 @@ exports.handler = async function(event) {
         last_updated: d.lastUpdated || null, has_graded: d.hasGraded || false,
         pokewallet_id: pokewallet_id,
         raw: { near_mint: { ebay: ebayNM, tcgplayer: tcgNM }, lightly_played: { ebay: ebayLP }, moderately_played: { ebay: ebayMP }, heavily_played: { ebay: ebayHP }, damaged: { ebay: ebayDMG } },
-        graded: { psa_10: ebayPSA10, psa_9: ebayPSA9, psa_8: ebayPSA8, bgs_9_5: ebayBGS95, bgs_9: ebayBGS9, cgc_10: ebayCGC10, cgc_9_5: ebayCGC95 },
+        graded: {
+          psa_10: ebayPSA10, psa_9: ebayPSA9, psa_8: ebayPSA8, psa_7: ebayPSA7,
+          psa_6: ebayPSA6, psa_5: ebayPSA5, psa_4: ebayPSA4, psa_3: ebayPSA3,
+          psa_2: ebayPSA2, psa_1: ebayPSA1,
+          bgs_10: ebayBGS10, bgs_9_5: ebayBGS95, bgs_9: ebayBGS9, bgs_8_5: ebayBGS85, bgs_8: ebayBGS8,
+          cgc_10: ebayCGC10, cgc_9_5: ebayCGC95, cgc_9: ebayCGC9, cgc_8_5: ebayCGC85, cgc_8: ebayCGC8
+        },
         market_avg: nmAvg, tcgplayer_recent: tcgNM.avg || null, ebay_recent: ebayNM.avg || null,
         low: Math.min(ebayNM.low||9999, tcgNM.low||9999) === 9999 ? 0 : Math.min(ebayNM.low||9999, tcgNM.low||9999),
         high: Math.max(ebayNM.high||0, tcgNM.high||0),

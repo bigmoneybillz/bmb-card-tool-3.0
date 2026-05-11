@@ -434,9 +434,7 @@ function renderSlab(d, company, grade){
   // Show searched grade prominently if it has data
   if(company && grade){
     var gradeNum = grade.split(' ')[0];
-    var key = company==='PSA' ? 'psa_'+gradeNum.replace('.','_') :
-              company==='BGS' ? 'bgs_'+gradeNum.replace('.','_') :
-                                'cgc_'+gradeNum.replace('.','_');
+    var key = (company==='PSA' ? 'psa_' : company==='BGS' ? 'bgs_' : 'cgc_') + gradeNum.replace('.','_');
     var gData = gr[key];
     if(gData && gData.avg){
       var gc = company==='PSA'?'#f87171':company==='BGS'?'#60a5fa':'#c084fc';
@@ -459,9 +457,16 @@ function renderSlab(d, company, grade){
   // All available grades
   var grades=[
     {key:'psa_10',label:'PSA 10',color:'#dc2626'},{key:'psa_9',label:'PSA 9',color:'#dc2626'},
-    {key:'psa_8',label:'PSA 8',color:'#dc2626'},{key:'bgs_9_5',label:'BGS 9.5',color:'#2563eb'},
-    {key:'bgs_9',label:'BGS 9',color:'#2563eb'},{key:'cgc_10',label:'CGC 10',color:'#7c3aed'},
-    {key:'cgc_9_5',label:'CGC 9.5',color:'#7c3aed'}
+    {key:'psa_8',label:'PSA 8',color:'#dc2626'},{key:'psa_7',label:'PSA 7',color:'#dc2626'},
+    {key:'psa_6',label:'PSA 6',color:'#dc2626'},{key:'psa_5',label:'PSA 5',color:'#dc2626'},
+    {key:'psa_4',label:'PSA 4',color:'#dc2626'},{key:'psa_3',label:'PSA 3',color:'#dc2626'},
+    {key:'psa_2',label:'PSA 2',color:'#dc2626'},{key:'psa_1',label:'PSA 1',color:'#dc2626'},
+    {key:'bgs_10',label:'BGS 10',color:'#2563eb'},{key:'bgs_9_5',label:'BGS 9.5',color:'#2563eb'},
+    {key:'bgs_9',label:'BGS 9',color:'#2563eb'},{key:'bgs_8_5',label:'BGS 8.5',color:'#2563eb'},
+    {key:'bgs_8',label:'BGS 8',color:'#2563eb'},
+    {key:'cgc_10',label:'CGC 10',color:'#7c3aed'},{key:'cgc_9_5',label:'CGC 9.5',color:'#7c3aed'},
+    {key:'cgc_9',label:'CGC 9',color:'#7c3aed'},{key:'cgc_8_5',label:'CGC 8.5',color:'#7c3aed'},
+    {key:'cgc_8',label:'CGC 8',color:'#7c3aed'}
   ];
   var hasAny=grades.some(function(g){return gr[g.key]&&gr[g.key].avg;});
   if(hasAny){
