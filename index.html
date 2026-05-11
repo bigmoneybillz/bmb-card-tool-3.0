@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BMB Collective — Pokemon Card Tool</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --dark:#080610;--dark2:#0d0a14;--card2:#1e1433;--border:#3b1f6e;
+  --purple:#7c3aed;--purple2:#a855f7;--purple3:#c084fc;--purple4:#e9d5ff;
+  --text:#f3e8ff;--muted:#a78bca;--dim:#6b4f8a;
+  --green:#22c55e;--green2:#4ade80;--red2:#f87171;
+}
+body{font-family:'Inter',sans-serif;background:var(--dark2);color:var(--text);min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem;}
+.app{max-width:680px;width:100%;}
+.hdr{text-align:center;margin-bottom:1.75rem;position:relative;}
+.hdr::before{content:'';position:absolute;top:-40px;left:50%;transform:translateX(-50%);width:500px;height:200px;background:radial-gradient(ellipse,rgba(124,58,237,0.25) 0%,transparent 70%);pointer-events:none;}
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:.2em;color:var(--purple3);text-transform:uppercase;margin-bottom:6px;}
+.logo-bmb{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:4px;background:linear-gradient(135deg,#e9d5ff 0%,#a855f7 50%,#7c3aed 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
+.logo-sub{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:6px;color:var(--purple3);}
+.tagline{font-size:11px;color:var(--muted);margin-top:8px;}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--purple),transparent);margin:1.25rem 0;}
+.panel{background:linear-gradient(160deg,#100820,#0d0a14 60%,#130d22);border:1px solid var(--border);border-radius:16px;padding:1.75rem;position:relative;overflow:hidden;}
+.panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(168,85,247,.5),transparent);pointer-events:none;}
+.home-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.hbtn{border:none;border-radius:14px;padding:1.75rem 1rem;cursor:pointer;text-align:center;transition:transform .15s,box-shadow .15s;width:100%;}
+.hbtn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(124,58,237,.3);}
+.hbtn.comp{background:linear-gradient(145deg,#2d1b69,#1a0d3d);border:1px solid #5b21b6;}
+.hbtn.sell{background:var(--card2);border:1px solid var(--border);}
+.hbtn-icon{font-size:36px;display:block;margin-bottom:10px;color:var(--purple4);}
+.hbtn.sell .hbtn-icon{color:var(--purple3);}
+.hbtn-title{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:3px;color:var(--purple4);margin-bottom:5px;}
+.hbtn.sell .hbtn-title{color:var(--purple3);}
+.hbtn-sub{font-size:11px;color:var(--muted);line-height:1.5;}
+.back-row{display:flex;align-items:center;gap:8px;margin-bottom:1.25rem;}
+.back-btn{background:transparent;border:1px solid var(--border);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:12px;color:var(--muted);display:inline-flex;align-items:center;gap:4px;font-family:'Inter',sans-serif;}
+.back-btn:hover{border-color:var(--purple2);color:var(--purple3);}
+.panel-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;color:var(--purple3);}
+.toggle{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:1rem;background:var(--dark);}
+.toggle button{flex:1;padding:9px;border:none;cursor:pointer;font-weight:600;font-size:12px;display:flex;align-items:center;justify-content:center;gap:6px;background:transparent;color:var(--muted);font-family:'Inter',sans-serif;}
+.toggle button.on{background:linear-gradient(135deg,#5b21b6,#7c3aed);color:#f3e8ff;}
+label{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:5px;}
+input[type=text],input[type=number],select{display:block;width:100%;padding:9px 12px;font-size:14px;background:#080610;border:1px solid var(--border);border-radius:8px;color:var(--text);outline:none;font-family:'Inter',sans-serif;}
+input:focus,select:focus{border-color:var(--purple2);box-shadow:0 0 0 3px rgba(124,58,237,.2);}
+input::placeholder{color:var(--dim);}
+select option{background:#1a1028;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.fld{margin-bottom:10px;}
+.hint{font-size:11px;color:var(--dim);margin-top:4px;}
+.pbtn{width:100%;background:linear-gradient(135deg,#5b21b6,#7c3aed);color:#f3e8ff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:.75rem;font-family:'Inter',sans-serif;}
+.pbtn:disabled{background:var(--card2);color:var(--dim);cursor:default;}
+.errbx{margin-top:.75rem;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--red2);}
+
+/* Card image */
+.card-img-wrap{display:flex;gap:1.25rem;align-items:flex-start;margin-bottom:1rem;}
+.card-img{width:120px;min-width:120px;border-radius:10px;border:1px solid var(--border);box-shadow:0 4px 20px rgba(124,58,237,.3);}
+.card-img-info{flex:1;}
+
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin:1rem 0;}
+.stat{background:var(--card2);border-radius:10px;padding:12px 14px;border:1px solid var(--border);}
+.stat.hi{background:linear-gradient(145deg,#2d1b69,#1a0d3d);border-color:#5b21b6;}
+.stat .l{font-size:9px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;}
+.stat.hi .l{color:var(--purple3);}
+.stat .v{font-size:16px;font-weight:700;color:var(--text);}
+.stat.hi .v{font-size:22px;color:var(--purple4);}
+.pill{font-size:11px;color:var(--purple3);background:rgba(124,58,237,.2);border-radius:6px;padding:2px 8px;border:1px solid var(--border);}
+.note{background:rgba(124,58,237,.1);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--muted);margin-bottom:.75rem;}
+.sell-btn{width:100%;background:linear-gradient(135deg,#15803d,#22c55e);color:#f0fdf4;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;font-family:'Inter',sans-serif;margin-top:1rem;}
+.grade-card{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:.75rem;}
+.grade-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:8px;}
+.grade-box{background:var(--dark);border-radius:8px;padding:10px 12px;border:1px solid var(--border);cursor:pointer;transition:border-color .15s,transform .1s;}
+.grade-box:hover{transform:translateY(-1px);}
+.grade-box .gl{font-size:10px;color:var(--dim);margin-bottom:3px;font-weight:600;}
+.grade-box .gv{font-size:16px;font-weight:700;color:var(--text);}
+.grade-box .gsell{font-size:10px;color:var(--purple3);margin-top:3px;}
+.seclbl{font-size:10px;font-weight:700;color:var(--purple3);text-transform:uppercase;letter-spacing:.1em;margin:1.25rem 0 8px;display:flex;align-items:center;gap:8px;}
+.seclbl::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent);}
+.pcard{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:8px;}
+.pstat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:8px 0;}
+.ps{background:var(--dark);border-radius:8px;padding:9px 11px;border:1px solid var(--border);}
+.ps.g{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.4);}
+.pl{font-size:10px;color:var(--dim);margin-bottom:2px;font-weight:600;}
+.pv{font-size:14px;font-weight:700;color:var(--text);}
+.ps.g .pv{color:var(--green2);}
+.pv.red{color:var(--red2);}
+.prog{height:4px;background:rgba(124,58,237,.2);border-radius:4px;overflow:hidden;margin-top:6px;}
+.cash-wrap{border:1px solid var(--green);border-radius:14px;padding:16px;margin-bottom:1rem;background:rgba(34,197,94,.04);}
+.cash-hdr{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;margin-bottom:14px;color:var(--green2);}
+.otier{border-radius:10px;padding:12px 14px;margin-bottom:8px;}
+.otier.fl{background:rgba(202,138,4,.12);border:1px solid rgba(202,138,4,.4);}
+.otier.mi{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.4);}
+.otier.ce{background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.4);}
+.otrow{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px;}
+.otag{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px;}
+.oamt{font-size:26px;font-weight:800;}
+.olike{font-size:20px;font-weight:800;}
+.olbl{font-size:10px;font-weight:600;}
+.lbar{height:5px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden;margin-top:5px;}
+.lbar div{height:100%;border-radius:4px;}
+.odesc{font-size:12px;margin-top:7px;}
+.fl .otag,.fl .oamt,.fl .olike,.fl .olbl,.fl .odesc{color:#fbbf24;}
+.mi .otag,.mi .oamt,.mi .olike,.mi .olbl,.mi .odesc{color:var(--green2);}
+.ce .otag,.ce .oamt,.ce .olike,.ce .olbl,.ce .odesc{color:#818cf8;}
+.walkaway{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.4);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--red2);}
+.edu{background:rgba(124,58,237,.1);border:1px solid var(--border);border-radius:10px;padding:14px 16px;font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:1rem;}
+.edu-title{font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:6px;color:var(--purple3);}
+.tip{background:rgba(124,58,237,.15);border-radius:8px;padding:9px 12px;font-size:12px;display:flex;gap:8px;margin-top:8px;color:var(--purple3);}
+.lov{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;z-index:9999;}
+.lbox{background:#1a1028;border:1px solid #3b1f6e;border-radius:16px;padding:2rem;text-align:center;max-width:280px;}
+.lspinner{width:48px;height:48px;border:3px solid rgba(124,58,237,.3);border-top-color:#7c3aed;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem;}
+.alt-result{background:rgba(124,58,237,.08);border:1px solid var(--border);border-radius:8px;padding:8px 12px;margin-bottom:6px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:12px;}
+.alt-result:hover{border-color:var(--purple2);background:rgba(124,58,237,.15);}
+.alt-result img{width:36px;height:50px;object-fit:contain;border-radius:4px;}
+.src-badge{display:inline-flex;align-items:center;font-size:10px;font-weight:700;border-radius:4px;padding:2px 6px;}
+.src-ebay{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);}
+.src-tcg{background:rgba(96,165,250,.15);color:#60a5fa;border:1px solid rgba(96,165,250,.3);}
+@keyframes spin{to{transform:rotate(360deg);}}
+.spin{display:inline-block;animation:spin .9s linear infinite;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="hdr">
+    <div class="eyebrow">Pokemon Card Tool</div>
+    <div class="logo-bmb">BMB</div>
+    <div class="logo-sub">Collective</div>
+    <div class="tagline">Live TCGPlayer &amp; eBay data &nbsp;&middot;&nbsp; Real fees &nbsp;&middot;&nbsp; Cash offer education</div>
+  </div>
+
+  <div id="b-loading" class="lov" style="display:none;">
+    <div class="lbox">
+      <div class="lspinner"></div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:#c084fc;margin-bottom:6px;">Fetching Prices...</div>
+      <div style="font-size:12px;color:#a78bca;">Pulling live TCGPlayer &amp; eBay sold data</div>
+    </div>
+  </div>
+
+  <div id="s-home" class="panel">
+    <div class="divider" style="margin-top:0;"></div>
+    <div class="home-grid">
+      <button class="hbtn comp" onclick="go('comp')">
+        <i class="ti ti-zoom-money hbtn-icon"></i>
+        <div class="hbtn-title">COMP</div>
+        <div class="hbtn-sub">Live market value from eBay sold listings &amp; TCGPlayer</div>
+      </button>
+      <button class="hbtn sell" onclick="go('sell',null)">
+        <i class="ti ti-coins hbtn-icon"></i>
+        <div class="hbtn-title">SELL</div>
+        <div class="hbtn-sub">Take-home after fees &amp; fair cash offer breakdown</div>
+      </button>
+    </div>
+  </div>
+
+  <div id="s-comp" class="panel" style="display:none;">
+    <div class="back-row">
+      <button class="back-btn" onclick="go('home')"><i class="ti ti-arrow-left" style="font-size:13px;"></i> Back</button>
+      <span class="panel-title">Comp a Card</span>
+    </div>
+    <div class="toggle">
+      <button id="c-raw" class="on" onclick="setCompType('raw')"><i class="ti ti-cards" style="font-size:14px;"></i> Raw card</button>
+      <button id="c-slab" onclick="setCompType('slab')"><i class="ti ti-certificate" style="font-size:14px;"></i> Graded slab</button>
+    </div>
+    <div class="fld"><label>Card name *</label><input id="c-name" type="text" placeholder="e.g. Charizard Holo, Pikachu VMAX, Umbreon Gold Star" onkeydown="if(event.key==='Enter')doComp()"></div>
+    <div class="grid2">
+      <div class="fld"><label>Set (optional)</label><input id="c-set" type="text" placeholder="e.g. Base Set, Evolving Skies"></div>
+      <div class="fld" id="c-condwrap">
+        <label>Condition</label>
+        <select id="c-cond">
+          <option value="NEAR_MINT">Near Mint</option>
+          <option value="LIGHTLY_PLAYED">Lightly Played</option>
+          <option value="MODERATELY_PLAYED">Moderately Played</option>
+          <option value="HEAVILY_PLAYED">Heavily Played</option>
+          <option value="DAMAGED">Damaged</option>
+        </select>
+      </div>
+    </div>
+    <!-- Card number - raw only -->
+    <div class="fld" id="c-numwrap">
+      <label>Card number *</label>
+      <input id="c-num" type="text" placeholder="e.g. 191" onkeydown="if(event.key==='Enter')doComp()">
+      <p class="hint">Number only — no # symbol</p>
+    </div>
+    <!-- Slab company + grade selectors -->
+    <div id="c-slabwrap" style="display:none;">
+      <div class="grid2">
+        <div class="fld">
+          <label>Grading company</label>
+          <select id="c-company" onchange="updateGrades()">
+            <option value="PSA">PSA</option>
+            <option value="BGS">BGS</option>
+            <option value="CGC">CGC</option>
+          </select>
+        </div>
+        <div class="fld">
+          <label>Grade</label>
+          <select id="c-grade">
+            <option>10</option><option>9</option><option>8</option><option>7</option>
+            <option>6</option><option>5</option><option>4</option><option>3</option>
+            <option>2</option><option>1</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <button class="pbtn" id="c-btn" onclick="doComp()"><i class="ti ti-search" style="font-size:16px;"></i> Comp This Card</button>
+    <div id="c-err" class="errbx" style="display:none;"></div>
+    <div id="c-result" style="display:none;margin-top:1.5rem;"></div>
+  </div>
+
+  <div id="s-sell" class="panel" style="display:none;">
+    <div class="back-row">
+      <button class="back-btn" id="sell-back" onclick="go('home')"><i class="ti ti-arrow-left" style="font-size:13px;"></i> Back</button>
+      <span class="panel-title">Sell Your Card</span>
+    </div>
+    <div class="toggle">
+      <button id="s-raw" class="on" onclick="setSellType('raw')"><i class="ti ti-cards" style="font-size:14px;"></i> Raw card</button>
+      <button id="s-slab" onclick="setSellType('slab')"><i class="ti ti-certificate" style="font-size:14px;"></i> Graded slab</button>
+    </div>
+    <div class="fld"><label>Card name (optional)</label><input id="s-name" type="text" placeholder="e.g. Charizard Base Set Holo"></div>
+    <div class="grid2">
+      <div class="fld"><label id="s-cond-lbl">Condition</label>
+        <select id="s-cond" onchange="clearSell()">
+          <option>Near Mint</option><option>Lightly Played</option>
+          <option>Moderately Played</option><option>Heavily Played</option><option>Damaged</option>
+        </select>
+      </div>
+      <div class="fld">
+        <label>Market value *</label>
+        <div style="position:relative;">
+          <span style="position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--dim);pointer-events:none;font-weight:700;">$</span>
+          <input id="s-price" type="number" min="0" step="0.01" placeholder="0.00" style="padding-left:22px;" oninput="clearSell()" onkeydown="if(event.key==='Enter')doSell()">
+        </div>
+      </div>
+    </div>
+    <p class="hint">Use COMP to get the market price — or enter one you already know.</p>
+    <button class="pbtn" onclick="doSell()"><i class="ti ti-calculator" style="font-size:16px;"></i> Calculate My Take-Home</button>
+    <div id="s-result" style="display:none;margin-top:1.75rem;"></div>
+  </div>
+</div>
+
+<script>
+var NETLIFY = 'https://magenta-liger-d955da.netlify.app/.netlify/functions/comp';
+var PW_KEY = 'pk_live_84e8836ef168b61235bce609e28937157750ccee44cd6863';
+
+function loadCardImage(pwId, imgEl) {
+  if (!pwId || !imgEl) return;
+  fetch('https://api.pokewallet.io/images/' + pwId + '?size=high', {
+    headers: { 'X-API-Key': PW_KEY }
+  })
+  .then(function(r) {
+    if (!r.ok) throw new Error('no image');
+    return r.blob();
+  })
+  .then(function(blob) {
+    imgEl.src = URL.createObjectURL(blob);
+    imgEl.style.display = '';
+  })
+  .catch(function() { imgEl.style.display = 'none'; });
+}
+var SELL_TYPE = 'raw';
+var COMP_TYPE = 'raw';
+var lastData = null;
+
+function S(i){document.getElementById(i).style.display='';}
+function H(i){document.getElementById(i).style.display='none';}
+function E(i){return document.getElementById(i);}
+function fmt(n){return n?parseFloat(n).toFixed(2):'--';}
+function fp(v){return Math.round(v*100)+'%';}
+
+function go(screen, prefill){
+  ['s-home','s-comp','s-sell'].forEach(H);
+  S('s-'+screen);
+  if(screen==='sell'){
+    if(prefill){
+      E('s-name').value  = prefill.name || '';
+      E('s-price').value = parseFloat(prefill.price).toFixed(2);
+      setSellType(prefill.isSlab ? 'slab' : 'raw');
+      if(prefill.grade) setTimeout(function(){ E('s-cond').value = prefill.grade; }, 50);
+      E('sell-back').onclick = function(){ go('comp'); };
+    } else {
+      E('sell-back').onclick = function(){ go('home'); };
+    }
+    clearSell();
+  }
+}
+
+function setCompType(t){
+  COMP_TYPE = t;
+  E('c-raw').className  = t==='raw'  ? 'on' : '';
+  E('c-slab').className = t==='slab' ? 'on' : '';
+  E('c-condwrap').style.display  = t==='raw'  ? '' : 'none';
+  E('c-numwrap').style.display   = t==='raw'  ? '' : 'none';
+  E('c-slabwrap').style.display  = t==='slab' ? '' : 'none';
+  H('c-result'); H('c-err');
+}
+
+function updateGrades(){
+  var company = E('c-company').value;
+  var sel = E('c-grade');
+  var grades;
+  if(company === 'BGS'){
+    grades = ['10 Pristine','9.5 Gem Mint','9','8.5','8','7.5','7','6.5','6','5.5','5','4.5','4','3.5','3','2.5','2','1.5','1'];
+  } else if(company === 'CGC'){
+    grades = ['10 Pristine Gold','10','9.5','9','8.5','8','7.5','7','6.5','6','5.5','5','4.5','4','3.5','3','2.5','2','1.5','1'];
+  } else {
+    // PSA
+    grades = ['10','9','8','7','6','5','4','3','2','1'];
+  }
+  sel.innerHTML = grades.map(function(g){return'<option>'+g+'</option>';}).join('');
+}
+
+function setSellType(t){
+  SELL_TYPE = t;
+  E('s-raw').className  = t==='raw'  ? 'on' : '';
+  E('s-slab').className = t==='slab' ? 'on' : '';
+  var lbl = E('s-cond-lbl'), sel = E('s-cond');
+  if(t==='slab'){
+    lbl.textContent = 'Grade';
+    sel.innerHTML = ['PSA 10','PSA 9','PSA 8','PSA 7','PSA 6','PSA 5','BGS 9.5','BGS 9','BGS 8.5','CGC 10','CGC 9.5','CGC 9'].map(function(g){return'<option>'+g+'</option>';}).join('');
+  } else {
+    lbl.textContent = 'Condition';
+    sel.innerHTML = ['Near Mint','Lightly Played','Moderately Played','Heavily Played','Damaged'].map(function(c){return'<option>'+c+'</option>';}).join('');
+  }
+  clearSell();
+}
+
+function clearSell(){ H('s-result'); }
+
+function trendBadge(trend, pct){
+  if(!trend) return '';
+  var up=trend==='up', st=trend==='stable';
+  var c=up?'#4ade80':st?'#fbbf24':'#f87171';
+  var bg=up?'rgba(74,222,128,.15)':st?'rgba(251,191,36,.15)':'rgba(248,113,113,.15)';
+  return '<span style="font-size:11px;font-weight:700;color:'+c+';background:'+bg+';border-radius:6px;padding:2px 8px;">'+(up?'&#8593;':st?'&#8594;':'&#8595;')+' '+Math.abs(pct||0).toFixed(1)+'% / 30d</span>';
+}
+
+function condPrice(d, condKey){
+  var raw=d.raw||{};
+  var map={'NEAR_MINT':raw.near_mint,'LIGHTLY_PLAYED':raw.lightly_played,'MODERATELY_PLAYED':raw.moderately_played,'HEAVILY_PLAYED':raw.heavily_played,'DAMAGED':raw.damaged};
+  var cp=map[condKey]||raw.near_mint||{};
+  var eb=cp.ebay||{}, tcg=condKey==='NEAR_MINT'?(cp.tcgplayer||{}):{};
+  var avg=eb.avg||tcg.avg||0;
+  var low=Math.min(eb.low||9999,tcg.low||9999); if(low===9999)low=0;
+  return{avg:avg,low:low,high:Math.max(eb.high||0,tcg.high||0),sales:(eb.saleCount||0)+(tcg.saleCount||0),ebayAvg:eb.avg,tcgAvg:tcg.avg,avg7:eb.avg7d,avg30:eb.avg30d};
+}
+
+function doComp(){
+  var name=E('c-name').value.trim();
+  if(!name){alert('Please enter a card name.');return;}
+  var set=E('c-set').value.trim();
+  var num=COMP_TYPE==='raw'?E('c-num').value.trim():'';
+  var company=COMP_TYPE==='slab'?E('c-company').value:'';
+  var grade=COMP_TYPE==='slab'?E('c-grade').value:'';
+  var cond=COMP_TYPE==='raw'?E('c-cond').value:'NEAR_MINT';
+  // Validate card number for raw
+  if(COMP_TYPE==='raw' && !num){alert('Please enter the card number.');return;}
+  var btn=E('c-btn');
+  btn.disabled=true;
+  btn.innerHTML='<i class="ti ti-loader spin" style="font-size:16px;"></i> Fetching live data...';
+  H('c-err');H('c-result');S('b-loading');
+
+  fetch(NETLIFY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({search:name,set:set,num:num,company:company,grade:grade})})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    H('b-loading');
+    if(d.error)throw new Error(d.error);
+    lastData=d;
+    COMP_TYPE==='slab'?renderSlab(d):renderComp(d,cond);
+  })
+  .catch(function(e){H('b-loading');E('c-err').textContent='Error: '+e.message;S('c-err');})
+  .finally(function(){btn.disabled=false;btn.innerHTML='<i class="ti ti-search" style="font-size:16px;"></i> Comp This Card';});
+}
+
+function renderComp(d, condKey){
+  var cp=condPrice(d,condKey);
+  var sn=(d.card_name||'').replace(/'/g,'');
+  var h='';
+
+  // Card image + header side by side
+  if(d.pokewallet_id){
+    h+='<div class="card-img-wrap">';
+    h+='<img class="card-img" id="bmb-card-img" src="" alt="'+d.card_name+'" style="display:none;">';
+    h+='<div class="card-img-info">';
+  }
+
+  h+='<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:.5rem;">';
+  h+='<span style="font-weight:700;font-size:17px;color:#e9d5ff;">'+d.card_name+'</span></div>';
+  h+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.5rem;">';
+  if(d.set)     h+='<span class="pill">'+d.set+'</span>';
+  if(d.variant) h+='<span class="pill">'+d.variant+'</span>';
+  if(d.rarity)  h+='<span class="pill">'+d.rarity+'</span>';
+  h+=trendBadge(d.trend,d.trend_pct);
+  h+='</div>';
+  h+='<div style="font-size:11px;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap;">';
+  h+='<span class="src-badge src-ebay">eBay</span><span class="src-badge src-tcg">TCGPlayer</span>';
+  if(d.last_updated) h+='<span style="font-size:10px;color:var(--dim);">Updated '+new Date(d.last_updated).toLocaleDateString()+'</span>';
+  h+='</div>';
+
+  if(d.pokewallet_id){ h+='</div></div>'; }
+
+  // Condition switcher
+  h+='<div style="margin-bottom:1rem;"><label style="font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:5px;">Condition</label>';
+  h+='<select onchange="renderComp(lastData,this.value)" style="display:block;width:100%;padding:9px 12px;font-size:14px;background:#080610;border:1px solid var(--border);border-radius:8px;color:var(--text);outline:none;">';
+  [{k:'NEAR_MINT',l:'Near Mint'},{k:'LIGHTLY_PLAYED',l:'Lightly Played'},{k:'MODERATELY_PLAYED',l:'Moderately Played'},{k:'HEAVILY_PLAYED',l:'Heavily Played'},{k:'DAMAGED',l:'Damaged'}].forEach(function(c){
+    h+='<option value="'+c.k+'"'+(c.k===condKey?' selected':'')+'>'+c.l+'</option>';
+  });
+  h+='</select></div>';
+
+  h+='<div class="stat-grid">';
+  h+='<div class="stat hi"><div class="l">Market avg</div><div class="v">$'+fmt(cp.avg)+'</div></div>';
+  if(cp.ebayAvg) h+='<div class="stat"><div class="l">eBay avg</div><div class="v">$'+fmt(cp.ebayAvg)+'</div></div>';
+  if(cp.tcgAvg)  h+='<div class="stat"><div class="l">TCGPlayer</div><div class="v">$'+fmt(cp.tcgAvg)+'</div></div>';
+  if(cp.low||cp.high) h+='<div class="stat"><div class="l">Low / High</div><div class="v">$'+fmt(cp.low)+' – $'+fmt(cp.high)+'</div></div>';
+  if(cp.sales)   h+='<div class="stat"><div class="l">Recent sales</div><div class="v">'+cp.sales+'</div></div>';
+  if(cp.avg30)   h+='<div class="stat"><div class="l">30d avg</div><div class="v">$'+fmt(cp.avg30)+'</div></div>';
+  h+='</div>';
+
+  if(d.all_results&&d.all_results.length>1){
+    h+='<div style="margin-bottom:.75rem;"><div style="font-size:11px;color:var(--muted);margin-bottom:6px;">Not the right card? Try:</div>';
+    d.all_results.slice(1).forEach(function(r){
+      h+='<div class="alt-result" onclick="fetchById(\''+r.id+'\')">';
+      if(r.image) h+='<img src="'+r.image+'" alt="" onerror="this.style.display=\'none\'" style="width:36px;height:50px;object-fit:contain;border-radius:4px;">';
+      h+='<span style="flex:1;">'+r.name+(r.set?' &middot; '+r.set:'')+(r.number?' #'+r.number:'')+'</span>';
+      h+='<i class="ti ti-chevron-right" style="font-size:14px;color:var(--muted);"></i></div>';
+    });
+    h+='</div>';
+  }
+
+  h+='<button class="sell-btn" onclick="go(\'sell\',{name:\''+sn+'\',price:'+cp.avg+',isSlab:false})"><i class="ti ti-coins" style="font-size:16px;"></i> Sell This Card — $'+fmt(cp.avg)+'</button>';
+  E('c-result').innerHTML=h; S('c-result');
+  if(d.pokewallet_id) loadCardImage(d.pokewallet_id, document.getElementById('bmb-card-img'));
+}
+
+function renderSlab(d){
+  var gr=d.graded||{};
+  var sn=(d.card_name||'').replace(/'/g,'');
+  var h='';
+
+  if(d.pokewallet_id){
+    h+='<div class="card-img-wrap">';
+    h+='<img class="card-img" id="bmb-card-img" src="" alt="'+d.card_name+'" style="display:none;">';
+    h+='<div class="card-img-info">';
+  }
+
+  h+='<div style="font-weight:700;font-size:17px;color:#e9d5ff;margin-bottom:.5rem;">'+d.card_name+'</div>';
+  h+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.5rem;">';
+  if(d.set)h+='<span class="pill">'+d.set+'</span>';
+  if(d.variant)h+='<span class="pill">'+d.variant+'</span>';
+  h+=trendBadge(d.trend,d.trend_pct);
+  h+='</div>';
+  h+='<div style="font-size:11px;color:var(--muted);">eBay sold — graded slabs</div>';
+
+  if(d.pokewallet_id){ h+='</div></div>'; }
+
+  // Show specific grade prominently if searched for
+  if(d.specific_slab && d.specific_slab.data && d.specific_slab.data.avg){
+    var sd = d.specific_slab;
+    var gc = sd.grade.startsWith('PSA')?'#f87171':sd.grade.startsWith('BGS')?'#60a5fa':'#c084fc';
+    h+='<div style="background:linear-gradient(145deg,#1a0d3d,#0d0a14);border:1px solid '+gc+'44;border-radius:14px;padding:16px;margin:1rem 0;text-align:center;">';
+    h+='<div style="font-size:11px;font-weight:700;color:'+gc+';text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">'+sd.grade+' Market Price</div>';
+    h+='<div style="font-size:40px;font-weight:800;color:#e9d5ff;margin-bottom:4px;">$'+fmt(sd.data.avg)+'</div>';
+    if(sd.data.low&&sd.data.high)h+='<div style="font-size:12px;color:var(--muted);">Range: $'+fmt(sd.data.low)+' – $'+fmt(sd.data.high)+'</div>';
+    if(sd.data.saleCount)h+='<div style="font-size:11px;color:var(--dim);margin-top:3px;">'+sd.data.saleCount+' eBay sold</div>';
+    h+='<button class="sell-btn" style="margin-top:12px;" onclick="go('sell',{name:''+sn+'',price:'+sd.data.avg+',isSlab:true,grade:''+sd.grade+''})"><i class="ti ti-coins" style="font-size:16px;"></i> Sell This '+sd.grade+' — $'+fmt(sd.data.avg)+'</button>';
+    h+='</div>';
+    h+='<div style="font-size:11px;color:var(--muted);margin-bottom:8px;">All available grades:</div>';
+  } else if(d.market_avg){
+    h+='<div class="note" style="margin-top:1rem;"><i class="ti ti-cards" style="font-size:13px;margin-right:5px;vertical-align:-2px;"></i><strong>Raw NM baseline:</strong> $'+fmt(d.market_avg)+' — graded prices below</div>';
+  }
+
+  var grades=[
+    {key:'psa_10', label:'PSA 10', color:'#dc2626'},
+    {key:'psa_9',  label:'PSA 9',  color:'#dc2626'},
+    {key:'psa_8',  label:'PSA 8',  color:'#dc2626'},
+    {key:'bgs_9_5',label:'BGS 9.5',color:'#2563eb'},
+    {key:'bgs_9',  label:'BGS 9',  color:'#2563eb'},
+    {key:'cgc_10', label:'CGC 10', color:'#7c3aed'},
+    {key:'cgc_9_5',label:'CGC 9.5',color:'#7c3aed'},
+  ];
+  var hasAny=grades.some(function(g){return gr[g.key]&&gr[g.key].avg;});
+
+  if(!hasAny){
+    h+='<div class="note" style="color:var(--red2);border-color:rgba(239,68,68,.3);">No graded slab eBay sales found. Card may not have enough sold data yet.</div>';
+  } else {
+    h+='<div class="grade-card"><div style="font-size:11px;font-weight:700;color:var(--purple3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;"><i class="ti ti-certificate" style="font-size:13px;margin-right:5px;vertical-align:-2px;"></i> Tap a grade to sell it</div>';
+    h+='<div class="grade-grid">';
+    grades.forEach(function(g){
+      var data=gr[g.key]; if(!data||!data.avg)return;
+      h+='<div class="grade-box" onclick="go(\'sell\',{name:\''+sn+'\',price:'+data.avg+',isSlab:true,grade:\''+g.label+'\'})" style="border-color:'+g.color+'33;">';
+      h+='<div class="gl" style="color:'+g.color+';">'+g.label+'</div>';
+      h+='<div class="gv">$'+fmt(data.avg)+'</div>';
+      if(data.saleCount) h+='<div class="gsell">'+data.saleCount+' eBay sales</div>';
+      if(data.low&&data.high) h+='<div style="font-size:10px;color:var(--dim);margin-top:2px;">$'+fmt(data.low)+' – $'+fmt(data.high)+'</div>';
+      h+='</div>';
+    });
+    h+='</div></div>';
+  }
+
+  if(d.all_results&&d.all_results.length>1){
+    h+='<div style="margin-top:.75rem;"><div style="font-size:11px;color:var(--muted);margin-bottom:6px;">Not the right card? Try:</div>';
+    d.all_results.slice(1).forEach(function(r){
+      h+='<div class="alt-result" onclick="fetchById(\''+r.id+'\',true)">';
+      if(r.image) h+='<img src="'+r.image+'" alt="" onerror="this.style.display=\'none\'" style="width:36px;height:50px;object-fit:contain;border-radius:4px;">';
+      h+='<span style="flex:1;">'+r.name+(r.set?' &middot; '+r.set:'')+(r.number?' #'+r.number:'')+'</span>';
+      h+='<i class="ti ti-chevron-right" style="font-size:14px;color:var(--muted);"></i></div>';
+    });
+    h+='</div>';
+  }
+
+  // Sell button for best available grade
+  var gr2 = d.graded || {};
+  var grOrder = [{k:'psa_10',l:'PSA 10'},{k:'psa_9',l:'PSA 9'},{k:'bgs_9_5',l:'BGS 9.5'},{k:'cgc_10',l:'CGC 10'},{k:'psa_8',l:'PSA 8'},{k:'bgs_9',l:'BGS 9'},{k:'cgc_9_5',l:'CGC 9.5'}];
+  var bestGr = null, bestPr = 0;
+  grOrder.forEach(function(g){ if(!bestGr && gr2[g.k] && gr2[g.k].avg){ bestGr=g.l; bestPr=gr2[g.k].avg; } });
+  if(bestGr){
+    h+='<button class="sell-btn" onclick="go(\'sell\',{name:\''+sn+'\',price:'+bestPr+',isSlab:true,grade:\''+bestGr+'\''+'})"><i class="ti ti-coins" style="font-size:16px;"></i> Sell Best Grade ('+bestGr+') — $'+fmt(bestPr)+'</button>';
+  }
+
+  E('c-result').innerHTML=h; S('c-result');
+  if(d.pokewallet_id) loadCardImage(d.pokewallet_id, document.getElementById('bmb-card-img'));
+}
+
+function fetchById(id, isSlab){
+  S('b-loading');
+  fetch(NETLIFY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({search:'id:'+id,set:''})})
+  .then(function(r){return r.json();})
+  .then(function(d){H('b-loading');if(d.error)throw new Error(d.error);lastData=d;isSlab?renderSlab(d):renderComp(d,'NEAR_MINT');})
+  .catch(function(e){H('b-loading');E('c-err').textContent='Error: '+e.message;S('c-err');});
+}
+
+function cashProfile(price,isSlab,cond){
+  var b;
+  if(price<10)b={f:.70,m:.75,c:.82,fL:88,mL:55,cL:15,sum:'Low-value cards move slowly; dealers need margin on small transactions.',tip:'Bundle with other cards to get a better overall rate.'};
+  else if(price<50)b={f:.70,m:.76,c:.83,fL:85,mL:55,cL:20,sum:'Mid-range bulk — decent demand but takes shelf time. Most offers land 70-76%.',tip:'Near Mint and a popular set will push offers toward the middle.'};
+  else if(price<150)b={f:.72,m:.78,c:.85,fL:82,mL:60,cL:25,sum:'Good liquidity here. Dealers compete — you have real negotiating room.',tip:'Shop 2-3 dealers. Competition gets you toward the high end.'};
+  else if(price<500)b={f:.74,m:.80,c:.87,fL:78,mL:62,cL:30,sum:'High-demand range. Dealers actively seek these and will negotiate.',tip:'Know the eBay sold average before you walk in.'};
+  else if(price<1500)b={f:.76,m:.82,c:.88,fL:72,mL:63,cL:35,sum:'Chase card territory. Multiple shops will want this — use that leverage.',tip:'Get competing offers from at least 2 shops.'};
+  else b={f:.78,m:.84,c:.90,fL:68,mL:60,cL:42,sum:'Trophy-tier card. Dealers know these move fast and will pay accordingly.',tip:'Consider consignment — you may net more than a straight cash sale.'};
+  var ca=0,ls=0;
+  if(!isSlab){var pa={'Near Mint':0,'Lightly Played':-.03,'Moderately Played':-.07,'Heavily Played':-.12,'Damaged':-.18};var la={'Near Mint':0,'Lightly Played':5,'Moderately Played':10,'Heavily Played':15,'Damaged':20};ca=pa[cond]||0;ls=la[cond]||0;}
+  var sb=isSlab?.03:0;
+  return{floor:Math.max(.70,b.f+ca+sb),mid:Math.max(.73,b.m+ca+sb),ceil:Math.min(.92,Math.max(.76,b.c+ca+(isSlab?.04:0))),fL:Math.min(95,Math.round(b.fL+ls+(isSlab?5:0))),mL:Math.max(15,Math.round(b.mL-ls*.6+(isSlab?8:0))),cL:Math.max(5,Math.round(b.cL-ls*.8+(isSlab?8:0))),sum:b.sum,tip:b.tip};
+}
+
+function doSell(){
+  var price=parseFloat(E('s-price').value);
+  if(!price||price<=0){alert('Please enter a market value greater than $0.');return;}
+  var isSlab=SELL_TYPE==='slab', cond=E('s-cond').value, name=E('s-name').value.trim();
+  var p=cashProfile(price,isSlab,cond);
+  var cf=price*p.floor, cm=price*p.mid, cc=price*p.ceil;
+  var en=price-(price*.1325+.30), tn=price-price*.1075, h='';
+
+  if(name)h+='<div style="font-weight:700;font-size:18px;color:#e9d5ff;margin-bottom:6px;">'+name+'</div>';
+  h+='<div style="display:flex;gap:8px;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;">';
+  if(isSlab){
+    var gc=cond.startsWith('PSA')?'#f87171':cond.startsWith('BGS')?'#60a5fa':'#c084fc';
+    var gbg=cond.startsWith('PSA')?'rgba(220,38,38,.15)':cond.startsWith('BGS')?'rgba(37,99,235,.15)':'rgba(124,58,237,.15)';
+    h+='<span style="font-size:11px;font-weight:700;color:'+gc+';background:'+gbg+';border-radius:6px;padding:3px 9px;border:1px solid '+gc+'44;">'+cond+'</span>';
+  } else { h+='<span class="pill">'+cond+'</span>'; }
+  h+='<span style="font-size:13px;color:var(--muted);">Market: <strong style="color:#e9d5ff;">$'+fmt(price)+'</strong></span></div>';
+
+  h+='<div class="seclbl">Platform take-home after fees</div>';
+  var pls=[{lb:'eBay',net:en,fee:price*.1325+.30,fs:'13.25% + $0.30',col:'#f87171',pro:'Largest reach, slab-friendly',con:'High fees, disputes, shipping'}];
+  if(!isSlab)pls.push({lb:'TCGPlayer',net:tn,fee:price*.1075,fs:'10.75%',col:'#60a5fa',pro:'Card buyers, lower fee',con:'Slower on niche cards'});
+
+  pls.forEach(function(pl){
+    var k=((pl.net/price)*100).toFixed(1);
+    h+='<div class="pcard"><div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;"><span style="font-weight:700;font-size:14px;color:'+pl.col+';">'+pl.lb+'</span><span style="font-size:12px;color:var(--dim);margin-left:auto;">Fee: '+pl.fs+'</span></div>';
+    h+='<div class="pstat-grid"><div class="ps"><div class="pl">List price</div><div class="pv">$'+fmt(price)+'</div></div><div class="ps"><div class="pl">Fees taken</div><div class="pv red">-$'+fmt(pl.fee)+'</div></div><div class="ps g"><div class="pl">You get</div><div class="pv">$'+fmt(pl.net)+'</div></div></div>';
+    h+='<div style="display:flex;gap:12px;font-size:12px;color:var(--dim);flex-wrap:wrap;margin-bottom:5px;"><span><i class="ti ti-check" style="font-size:12px;color:#4ade80;margin-right:3px;"></i>'+pl.pro+'</span><span><i class="ti ti-x" style="font-size:12px;color:#f87171;margin-right:3px;"></i>'+pl.con+'</span></div>';
+    h+='<div class="prog"><div style="height:100%;width:'+k+'%;background:'+pl.col+';border-radius:4px;"></div></div><div style="font-size:11px;color:var(--dim);margin-top:3px;">You keep '+k+'% of list price</div></div>';
+  });
+
+  h+='<div class="seclbl">Cash offer range</div>';
+  h+='<div class="cash-wrap"><div class="cash-hdr"><i class="ti ti-cash" style="font-size:20px;"></i> What dealers will pay — instant cash</div>';
+  function ot(cls,tag,amt,like,bc,desc){return'<div class="otier '+cls+'"><div class="otrow"><div><div class="otag">'+tag+'</div><div class="oamt">$'+fmt(amt)+'</div></div><div style="text-align:right;"><div class="olbl">Likelihood</div><div class="olike">'+like+'%</div><div class="olbl">of dealers</div></div></div><div class="lbar"><div style="width:'+like+'%;background:'+bc+';"></div></div><div style="font-size:11px;color:var(--dim);margin-top:3px;">'+like+'% of dealers will offer this or more</div><div class="odesc">'+desc+'</div></div>';}
+  h+=ot('fl','Floor — '+fp(p.floor)+' of market',cf,p.fL,'#ca8a04','Most dealers will meet or beat this — your walk-in baseline.');
+  h+=ot('mi','Fair offer — '+fp(p.mid)+' of market',cm,p.mL,'#22c55e','A fair deal for both sides. Push here first.');
+  h+=ot('ce','Best case — '+fp(p.ceil)+' of market',cc,p.cL,'#6366f1','Needs high demand or competing offers on the table.');
+  h+='<div class="walkaway"><i class="ti ti-ban" style="font-size:16px;flex-shrink:0;"></i><div><strong>Walk away if offered below $'+fmt(cf)+'</strong> ('+fp(p.floor)+' of market) — any legit dealer can do better.</div></div></div>';
+
+  h+='<div class="edu"><div class="edu-title"><i class="ti ti-school" style="font-size:15px;"></i> Why dealers don\'t pay full market</div>';
+  h+='<p style="margin-bottom:8px;">'+p.sum+'</p><p style="margin-bottom:8px;">Dealers need margin for grading risk, inventory time, resale fees, and overhead. That\'s why '+fp(p.floor)+' to '+fp(p.ceil)+' of market is the realistic window.</p>';
+  if(isSlab)h+='<p style="margin-bottom:8px;font-size:12px;"><i class="ti ti-certificate" style="font-size:13px;margin-right:4px;"></i>Graded slabs earn higher offers — condition confirmed, resale is faster.</p>';
+  h+='<div class="tip"><i class="ti ti-bulb" style="font-size:14px;flex-shrink:0;margin-top:1px;"></i><span><strong>Tip:</strong> '+p.tip+'</span></div></div>';
+
+  E('s-result').innerHTML=h; S('s-result');
+}
+</script>
+</body>
+</html>
