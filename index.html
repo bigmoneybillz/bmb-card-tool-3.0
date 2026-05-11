@@ -48,7 +48,6 @@ input:focus,select:focus{border-color:var(--purple2);box-shadow:0 0 0 3px rgba(1
 input::placeholder{color:var(--dim);}
 select option{background:#1a1028;}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
 .fld{margin-bottom:10px;}
 .hint{font-size:11px;color:var(--dim);margin-top:4px;}
 .pbtn{width:100%;background:linear-gradient(135deg,#5b21b6,#7c3aed);color:#f3e8ff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:.75rem;font-family:'Inter',sans-serif;}
@@ -64,13 +63,12 @@ select option{background:#1a1028;}
 .pill{font-size:11px;color:var(--purple3);background:rgba(124,58,237,.2);border-radius:6px;padding:2px 8px;border:1px solid var(--border);}
 .note{background:rgba(124,58,237,.1);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--muted);margin-bottom:.75rem;}
 .sell-btn{width:100%;background:linear-gradient(135deg,#15803d,#22c55e);color:#f0fdf4;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;font-family:'Inter',sans-serif;margin-top:1rem;}
-.grade-card{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:.75rem;}
-.grade-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:8px;}
+.grade-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:8px;}
 .grade-box{background:var(--dark);border-radius:8px;padding:10px 12px;border:1px solid var(--border);cursor:pointer;transition:border-color .15s,transform .1s;}
 .grade-box:hover{transform:translateY(-1px);}
 .grade-box .gl{font-size:10px;color:var(--dim);margin-bottom:3px;font-weight:600;}
 .grade-box .gv{font-size:16px;font-weight:700;color:var(--text);}
-.grade-box .gsell{font-size:10px;color:var(--purple3);margin-top:3px;}
+.grade-box .gs{font-size:10px;color:var(--purple3);margin-top:3px;}
 .seclbl{font-size:10px;font-weight:700;color:var(--purple3);text-transform:uppercase;letter-spacing:.1em;margin:1.25rem 0 8px;display:flex;align-items:center;gap:8px;}
 .seclbl::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent);}
 .pcard{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:8px;}
@@ -106,8 +104,8 @@ select option{background:#1a1028;}
 .lov{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;z-index:9999;}
 .lbox{background:#1a1028;border:1px solid #3b1f6e;border-radius:16px;padding:2rem;text-align:center;max-width:280px;}
 .lspinner{width:48px;height:48px;border:3px solid rgba(124,58,237,.3);border-top-color:#7c3aed;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem;}
-.alt-result{background:rgba(124,58,237,.08);border:1px solid var(--border);border-radius:8px;padding:8px 12px;margin-bottom:6px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:12px;}
-.alt-result:hover{border-color:var(--purple2);background:rgba(124,58,237,.15);}
+.alt-result{background:rgba(124,58,237,.08);border:1px solid var(--border);border-radius:8px;padding:8px 12px;margin-bottom:6px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:12px;}
+.alt-result:hover{border-color:var(--purple2);}
 .src-badge{display:inline-flex;align-items:center;font-size:10px;font-weight:700;border-radius:4px;padding:2px 6px;}
 .src-ebay{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);}
 .src-tcg{background:rgba(96,165,250,.15);color:#60a5fa;border:1px solid rgba(96,165,250,.3);}
@@ -160,17 +158,14 @@ select option{background:#1a1028;}
       <button id="c-slab" onclick="setCompType('slab')"><i class="ti ti-certificate" style="font-size:14px;"></i> Graded slab</button>
     </div>
 
-    <div class="grid2">
-      <div class="fld"><label>Card name *</label><input id="c-name" type="text" placeholder="e.g. Charizard Holo" onkeydown="if(event.key==='Enter')doComp()"></div>
-      <div class="fld"><label>Card # <span style="color:var(--red2);font-size:9px;letter-spacing:.05em;">(must include #)</span></label><input id="c-num" type="text" placeholder="e.g. #191" onkeydown="if(event.key==='Enter')doComp()"></div>
+    <!-- Search bar — same for raw and slab -->
+    <div class="fld">
+      <label id="c-search-lbl">Card name * — <span style="color:var(--purple3);font-weight:600;text-transform:none;letter-spacing:0;">#card number required (e.g. Charizard #4)</span></label>
+      <input id="c-search" type="text" placeholder="e.g. Charizard #4, Pikachu VMAX #188, Umbreon #215" onkeydown="if(event.key==='Enter')doComp()">
     </div>
 
-    <!-- RAW fields -->
+    <!-- RAW only fields -->
     <div id="c-raw-fields">
-      <div class="grid2">
-        <div class="fld"><label>Set (optional)</label><input id="c-set" type="text" placeholder="e.g. Base Set, Evolving Skies"></div>
-  
-      </div>
       <div class="fld"><label>Condition</label>
         <select id="c-cond">
           <option value="NEAR_MINT">Near Mint</option>
@@ -182,9 +177,8 @@ select option{background:#1a1028;}
       </div>
     </div>
 
-    <!-- SLAB fields -->
+    <!-- SLAB only fields -->
     <div id="c-slab-fields" style="display:none;">
-      <div class="fld"><label>Set (optional)</label><input id="c-set-slab" type="text" placeholder="e.g. Base Set, Evolving Skies"></div>
       <div class="grid2">
         <div class="fld"><label>Grading company</label>
           <select id="c-company" onchange="updateGrades()">
@@ -255,6 +249,20 @@ function E(i){return document.getElementById(i);}
 function fmt(n){return n?parseFloat(n).toFixed(2):'--';}
 function fp(v){return Math.round(v*100)+'%';}
 
+// Format tier key like PSA_10 -> "PSA 10", BGS_9_5 -> "BGS 9.5"
+function fmtTier(t){
+  return t.replace('_', ' ').replace('_', '.');
+}
+
+// Get color for grading company
+function gradeColor(tier){
+  if(tier.startsWith('PSA')) return '#f87171';
+  if(tier.startsWith('BGS')) return '#60a5fa';
+  if(tier.startsWith('CGC')) return '#c084fc';
+  if(tier.startsWith('SGC')) return '#4ade80';
+  return '#e9d5ff';
+}
+
 function go(screen, prefill){
   ['s-home','s-comp','s-sell'].forEach(H);
   S('s-'+screen);
@@ -263,7 +271,7 @@ function go(screen, prefill){
       E('s-name').value = prefill.name||'';
       E('s-price').value = parseFloat(prefill.price).toFixed(2);
       setSellType(prefill.isSlab?'slab':'raw');
-      if(prefill.grade) setTimeout(function(){ E('s-cond').value = prefill.grade; }, 50);
+      if(prefill.grade) setTimeout(function(){ E('s-cond').value = prefill.grade; },50);
       E('sell-back').onclick = function(){ go('comp'); };
     } else {
       E('sell-back').onclick = function(){ go('home'); };
@@ -282,16 +290,13 @@ function setCompType(t){
 }
 
 function updateGrades(){
-  var company = E('c-company').value;
+  var co = E('c-company').value;
   var sel = E('c-grade');
-  var grades;
-  if(company === 'BGS'){
-    grades = ['10 Pristine','9.5','9','8.5','8','7.5','7','6.5','6','5.5','5','4.5','4','3.5','3','2.5','2','1.5','1'];
-  } else if(company === 'CGC'){
-    grades = ['10 Pristine Gold','10','9.5','9','8.5','8','7.5','7','6.5','6','5.5','5','4.5','4','3.5','3','2.5','2','1.5','1'];
-  } else {
-    grades = ['10','9','8','7','6','5','4','3','2','1'];
-  }
+  var grades = co==='BGS'
+    ? ['10 Pristine','9.5','9','8.5','8','7.5','7','6.5','6','5.5','5','4.5','4','3.5','3','2.5','2','1.5','1']
+    : co==='CGC'
+    ? ['10 Pristine Gold','10','9.5','9','8.5','8','7.5','7','6.5','6','5.5','5','4.5','4','3.5','3','2.5','2','1.5','1']
+    : ['10','9','8','7','6','5','4','3','2','1'];
   sel.innerHTML = grades.map(function(g){return'<option>'+g+'</option>';}).join('');
 }
 
@@ -299,32 +304,37 @@ function setSellType(t){
   SELL_TYPE = t;
   E('s-raw').className  = t==='raw'  ? 'on' : '';
   E('s-slab').className = t==='slab' ? 'on' : '';
-  var lbl = E('s-cond-lbl'), sel = E('s-cond');
+  var lbl=E('s-cond-lbl'), sel=E('s-cond');
   if(t==='slab'){
-    lbl.textContent = 'Grade';
-    sel.innerHTML = ['PSA 10','PSA 9','PSA 8','PSA 7','PSA 6','PSA 5','PSA 4','PSA 3','PSA 2','PSA 1',
-                     'BGS 9.5','BGS 9','BGS 8.5','BGS 8','BGS 7','BGS 6','BGS 5','BGS 4','BGS 3','BGS 2','BGS 1',
-                     'CGC 10','CGC 9.5','CGC 9','CGC 8.5','CGC 8','CGC 7','CGC 6','CGC 5','CGC 4','CGC 3','CGC 2','CGC 1']
-                    .map(function(g){return'<option>'+g+'</option>';}).join('');
+    lbl.textContent='Grade';
+    var opts = [];
+    ['PSA','BGS','CGC'].forEach(function(co){
+      var grades = co==='BGS'
+        ? ['10 Pristine','9.5','9','8.5','8','7','6','5','4','3','2','1']
+        : co==='CGC'
+        ? ['10','9.5','9','8.5','8','7','6','5','4','3','2','1']
+        : ['10','9','8','7','6','5','4','3','2','1'];
+      grades.forEach(function(g){ opts.push(co+' '+g); });
+    });
+    sel.innerHTML = opts.map(function(o){return'<option>'+o+'</option>';}).join('');
   } else {
-    lbl.textContent = 'Condition';
-    sel.innerHTML = ['Near Mint','Lightly Played','Moderately Played','Heavily Played','Damaged']
-                    .map(function(c){return'<option>'+c+'</option>';}).join('');
+    lbl.textContent='Condition';
+    sel.innerHTML=['Near Mint','Lightly Played','Moderately Played','Heavily Played','Damaged'].map(function(c){return'<option>'+c+'</option>';}).join('');
   }
   clearSell();
 }
 
 function clearSell(){ H('s-result'); }
 
-function trendBadge(trend, pct){
-  if(!trend) return '';
-  var up=trend==='up', st=trend==='stable';
+function trendBadge(trend,pct){
+  if(!trend)return'';
+  var up=trend==='up',st=trend==='stable';
   var c=up?'#4ade80':st?'#fbbf24':'#f87171';
   var bg=up?'rgba(74,222,128,.15)':st?'rgba(251,191,36,.15)':'rgba(248,113,113,.15)';
-  return '<span style="font-size:11px;font-weight:700;color:'+c+';background:'+bg+';border-radius:6px;padding:2px 8px;">'+(up?'&#8593;':st?'&#8594;':'&#8595;')+' '+Math.abs(pct||0).toFixed(1)+'% / 30d</span>';
+  return'<span style="font-size:11px;font-weight:700;color:'+c+';background:'+bg+';border-radius:6px;padding:2px 8px;">'+(up?'&#8593;':st?'&#8594;':'&#8595;')+' '+Math.abs(pct||0).toFixed(1)+'% / 30d</span>';
 }
 
-function condPrice(d, condKey){
+function condPrice(d,condKey){
   var raw=d.raw||{};
   var map={'NEAR_MINT':raw.near_mint,'LIGHTLY_PLAYED':raw.lightly_played,'MODERATELY_PLAYED':raw.moderately_played,'HEAVILY_PLAYED':raw.heavily_played,'DAMAGED':raw.damaged};
   var cp=map[condKey]||raw.near_mint||{};
@@ -335,21 +345,11 @@ function condPrice(d, condKey){
 }
 
 function doComp(){
-  var name = E('c-name').value.trim();
-  if(!name){ alert('Please enter a card name.'); return; }
-
-  var set='', num='', company='', grade='', cond='NEAR_MINT';
-
-  if(COMP_TYPE==='raw'){
-    set  = E('c-set').value.trim();
-    num  = E('c-num').value.trim().replace('#','');
-    cond = E('c-cond').value;
-
-  } else {
-    set     = E('c-set-slab').value.trim();
-    company = E('c-company').value;
-    grade   = E('c-grade').value;
-  }
+  var search = E('c-search').value.trim();
+  if(!search){ alert('Please enter a card name and # number.'); return; }
+  var cond    = COMP_TYPE==='raw' ? E('c-cond').value : 'NEAR_MINT';
+  var company = COMP_TYPE==='slab' ? E('c-company').value : '';
+  var grade   = COMP_TYPE==='slab' ? E('c-grade').value : '';
 
   var btn=E('c-btn');
   btn.disabled=true;
@@ -359,7 +359,7 @@ function doComp(){
   fetch(NETLIFY,{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({search:name, set:set, num:num, company:company, grade:grade})
+    body:JSON.stringify({search:search, set:''})
   })
   .then(function(r){return r.json();})
   .then(function(d){
@@ -372,25 +372,38 @@ function doComp(){
   .finally(function(){btn.disabled=false;btn.innerHTML='<i class="ti ti-search" style="font-size:16px;"></i> Comp This Card';});
 }
 
-function renderComp(d, condKey){
-  var cp=condPrice(d,condKey);
-  var sn=(d.card_name||'').replace(/'/g,'');
-  var h='';
-
-  h+='<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:.5rem;">';
-  h+='<span style="font-weight:700;font-size:17px;color:#e9d5ff;">'+d.card_name+'</span></div>';
+function cardHeader(d){
+  var h='<div style="font-weight:700;font-size:17px;color:#e9d5ff;margin-bottom:.5rem;">'+d.card_name+'</div>';
   h+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.75rem;">';
-  if(d.set) h+='<span class="pill">'+d.set+'</span>';
+  if(d.set)     h+='<span class="pill">'+d.set+'</span>';
   if(d.variant) h+='<span class="pill">'+d.variant+'</span>';
-  if(d.rarity) h+='<span class="pill">'+d.rarity+'</span>';
+  if(d.rarity)  h+='<span class="pill">'+d.rarity+'</span>';
   h+=trendBadge(d.trend,d.trend_pct);
   h+='</div>';
+  return h;
+}
+
+function altResults(results, isSlab){
+  if(!results||results.length<=1) return '';
+  var h='<div style="margin-bottom:.75rem;"><div style="font-size:11px;color:var(--muted);margin-bottom:6px;">Not the right card? Try:</div>';
+  results.slice(1).forEach(function(r){
+    var fn = isSlab ? 'fetchById(\''+r.id+'\',true)' : 'fetchById(\''+r.id+'\',false)';
+    h+='<div class="alt-result" onclick="'+fn+'"><span>'+r.name+(r.set?' &middot; '+r.set:'')+(r.number?' #'+r.number:'')+'</span><i class="ti ti-chevron-right" style="font-size:14px;color:var(--muted);"></i></div>';
+  });
+  h+='</div>';
+  return h;
+}
+
+function renderComp(d,condKey){
+  var cp=condPrice(d,condKey);
+  var sn=(d.card_name||'').replace(/'/g,'');
+  var h=cardHeader(d);
+
   h+='<div style="font-size:11px;color:var(--muted);display:flex;gap:6px;margin-bottom:1rem;">';
   h+='<span class="src-badge src-ebay">eBay</span><span class="src-badge src-tcg">TCGPlayer</span>';
   if(d.last_updated) h+='<span style="font-size:10px;color:var(--dim);margin-left:auto;">Updated '+new Date(d.last_updated).toLocaleDateString()+'</span>';
   h+='</div>';
 
-  // Condition switcher
   h+='<div class="fld"><label style="font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:5px;">Condition</label>';
   h+='<select onchange="renderComp(lastData,this.value)" style="display:block;width:100%;padding:9px 12px;font-size:14px;background:#080610;border:1px solid var(--border);border-radius:8px;color:var(--text);outline:none;">';
   [{k:'NEAR_MINT',l:'Near Mint'},{k:'LIGHTLY_PLAYED',l:'Lightly Played'},{k:'MODERATELY_PLAYED',l:'Moderately Played'},{k:'HEAVILY_PLAYED',l:'Heavily Played'},{k:'DAMAGED',l:'Damaged'}].forEach(function(c){
@@ -407,96 +420,68 @@ function renderComp(d, condKey){
   if(cp.avg30)   h+='<div class="stat"><div class="l">30d avg</div><div class="v">$'+fmt(cp.avg30)+'</div></div>';
   h+='</div>';
 
-  if(d.all_results&&d.all_results.length>1){
-    h+='<div style="margin-bottom:.75rem;"><div style="font-size:11px;color:var(--muted);margin-bottom:6px;">Not the right card? Try:</div>';
-    d.all_results.slice(1).forEach(function(r){
-      h+='<div class="alt-result" onclick="fetchById(\''+r.id+'\')"><span style="flex:1;">'+r.name+(r.set?' &middot; '+r.set:'')+(r.number?' #'+r.number:'')+'</span><i class="ti ti-chevron-right" style="font-size:14px;color:var(--muted);"></i></div>';
-    });
-    h+='</div>';
-  }
-
+  h+=altResults(d.all_results, false);
   h+='<button class="sell-btn" onclick="go(\'sell\',{name:\''+sn+'\',price:'+cp.avg+',isSlab:false})"><i class="ti ti-coins" style="font-size:16px;"></i> Sell This Card — $'+fmt(cp.avg)+'</button>';
   E('c-result').innerHTML=h; S('c-result');
 }
 
 function renderSlab(d, company, grade){
-  var gr=d.graded||{};
+  var graded = d.graded || {};
+  var gradedOptions = d.graded_options || Object.keys(graded);
   var sn=(d.card_name||'').replace(/'/g,'');
-  var h='';
+  var h=cardHeader(d);
 
-  h+='<div style="font-weight:700;font-size:17px;color:#e9d5ff;margin-bottom:.5rem;">'+d.card_name+'</div>';
-  h+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.75rem;">';
-  if(d.set) h+='<span class="pill">'+d.set+'</span>';
-  if(d.variant) h+='<span class="pill">'+d.variant+'</span>';
-  h+=trendBadge(d.trend,d.trend_pct);
-  h+='</div>';
+  h+='<div style="font-size:11px;color:var(--muted);margin-bottom:1rem;">eBay sold — graded slabs</div>';
 
-  // Show searched grade prominently if it has data
+  // Show selected grade prominently
   if(company && grade){
     var gradeNum = grade.split(' ')[0];
-    var key = (company==='PSA' ? 'psa_' : company==='BGS' ? 'bgs_' : 'cgc_') + gradeNum.replace('.','_');
-    var gData = gr[key];
+    var tierKey = company + '_' + gradeNum.replace('.','_');
+    var gData = graded[tierKey];
+    var gc = gradeColor(tierKey);
     if(gData && gData.avg){
-      var gc = company==='PSA'?'#f87171':company==='BGS'?'#60a5fa':'#c084fc';
-      h+='<div style="background:linear-gradient(145deg,#1a0d3d,#0d0a14);border:1px solid '+gc+'55;border-radius:14px;padding:16px;margin-bottom:1rem;text-align:center;">';
+      h+='<div style="background:linear-gradient(145deg,#1a0d3d,#0d0a14);border:1px solid '+gc+'44;border-radius:14px;padding:16px;margin-bottom:1rem;text-align:center;">';
       h+='<div style="font-size:11px;font-weight:700;color:'+gc+';text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">'+company+' '+gradeNum+' Market Price</div>';
       h+='<div style="font-size:40px;font-weight:800;color:#e9d5ff;margin-bottom:4px;">$'+fmt(gData.avg)+'</div>';
       if(gData.low&&gData.high) h+='<div style="font-size:12px;color:var(--muted);">Range: $'+fmt(gData.low)+' – $'+fmt(gData.high)+'</div>';
       if(gData.saleCount) h+='<div style="font-size:11px;color:var(--dim);margin-top:3px;">'+gData.saleCount+' eBay sold</div>';
-      h+='<button class="sell-btn" style="margin-top:12px;" onclick="go(\'sell\',{name:\''+sn+'\',price:'+gData.avg+',isSlab:true,grade:\''+company+' '+gradeNum+'\'})"><i class="ti ti-coins" style="font-size:16px;"></i> Sell This '+company+' '+gradeNum+' — $'+fmt(gData.avg)+'</button>';
+      h+='<button class="sell-btn" style="margin-top:12px;" onclick="go(\'sell\',{name:\''+sn+'\',price:'+gData.avg+',isSlab:true,grade:\''+company+' '+gradeNum+'\'})"><i class="ti ti-coins" style="font-size:16px;"></i> Sell '+company+' '+gradeNum+' — $'+fmt(gData.avg)+'</button>';
       h+='</div>';
     } else {
-      h+='<div class="note" style="color:var(--red2);border-color:rgba(239,68,68,.3);">No eBay sold data found for '+company+' '+gradeNum+'. Try a different grade.</div>';
+      h+='<div class="note" style="color:var(--red2);border-color:rgba(239,68,68,.3);">No eBay sold data for '+company+' '+gradeNum+'. This grade may not have enough sales yet — try a different grade below.</div>';
     }
   }
 
-  if(d.market_avg){
-    h+='<div class="note"><i class="ti ti-cards" style="font-size:13px;margin-right:5px;vertical-align:-2px;"></i><strong>Raw NM:</strong> $'+fmt(d.market_avg)+'</div>';
-  }
+  if(d.market_avg) h+='<div class="note"><i class="ti ti-cards" style="font-size:13px;margin-right:5px;vertical-align:-2px;"></i><strong>Raw NM baseline:</strong> $'+fmt(d.market_avg)+'</div>';
 
-  // All available grades
-  var grades=[
-    {key:'psa_10',label:'PSA 10',color:'#dc2626'},{key:'psa_9',label:'PSA 9',color:'#dc2626'},
-    {key:'psa_8',label:'PSA 8',color:'#dc2626'},{key:'psa_7',label:'PSA 7',color:'#dc2626'},
-    {key:'psa_6',label:'PSA 6',color:'#dc2626'},{key:'psa_5',label:'PSA 5',color:'#dc2626'},
-    {key:'psa_4',label:'PSA 4',color:'#dc2626'},{key:'psa_3',label:'PSA 3',color:'#dc2626'},
-    {key:'psa_2',label:'PSA 2',color:'#dc2626'},{key:'psa_1',label:'PSA 1',color:'#dc2626'},
-    {key:'bgs_10',label:'BGS 10',color:'#2563eb'},{key:'bgs_9_5',label:'BGS 9.5',color:'#2563eb'},
-    {key:'bgs_9',label:'BGS 9',color:'#2563eb'},{key:'bgs_8_5',label:'BGS 8.5',color:'#2563eb'},
-    {key:'bgs_8',label:'BGS 8',color:'#2563eb'},
-    {key:'cgc_10',label:'CGC 10',color:'#7c3aed'},{key:'cgc_9_5',label:'CGC 9.5',color:'#7c3aed'},
-    {key:'cgc_9',label:'CGC 9',color:'#7c3aed'},{key:'cgc_8_5',label:'CGC 8.5',color:'#7c3aed'},
-    {key:'cgc_8',label:'CGC 8',color:'#7c3aed'}
-  ];
-  var hasAny=grades.some(function(g){return gr[g.key]&&gr[g.key].avg;});
-  if(hasAny){
-    h+='<div class="grade-card"><div style="font-size:11px;font-weight:700;color:var(--purple3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">All available grades — tap to sell</div>';
+  // All available grades from gradedOptions
+  if(gradedOptions.length){
+    h+='<div style="font-size:11px;font-weight:700;color:var(--purple3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;"><i class="ti ti-certificate" style="font-size:13px;margin-right:5px;vertical-align:-2px;"></i>All available grades — tap to sell</div>';
     h+='<div class="grade-grid">';
-    grades.forEach(function(g){
-      var data=gr[g.key]; if(!data||!data.avg) return;
-      h+='<div class="grade-box" onclick="go(\'sell\',{name:\''+sn+'\',price:'+data.avg+',isSlab:true,grade:\''+g.label+'\'})" style="border-color:'+g.color+'33;">';
-      h+='<div class="gl" style="color:'+g.color+';">'+g.label+'</div>';
+    gradedOptions.forEach(function(tier){
+      var data = graded[tier];
+      if(!data||!data.avg) return;
+      var label = fmtTier(tier);
+      var gc = gradeColor(tier);
+      h+='<div class="grade-box" onclick="go(\'sell\',{name:\''+sn+'\',price:'+data.avg+',isSlab:true,grade:\''+label+'\'})" style="border-color:'+gc+'33;">';
+      h+='<div class="gl" style="color:'+gc+';">'+label+'</div>';
       h+='<div class="gv">$'+fmt(data.avg)+'</div>';
-      if(data.saleCount) h+='<div class="gsell">'+data.saleCount+' eBay sales</div>';
+      if(data.saleCount) h+='<div class="gs">'+data.saleCount+' eBay sales</div>';
+      if(data.low&&data.high) h+='<div style="font-size:10px;color:var(--dim);margin-top:2px;">$'+fmt(data.low)+' – $'+fmt(data.high)+'</div>';
       h+='</div>';
     });
-    h+='</div></div>';
-  }
-
-  if(d.all_results&&d.all_results.length>1){
-    h+='<div style="margin-top:.75rem;"><div style="font-size:11px;color:var(--muted);margin-bottom:6px;">Not the right card? Try:</div>';
-    d.all_results.slice(1).forEach(function(r){
-      h+='<div class="alt-result" onclick="fetchById(\''+r.id+'\',true)"><span style="flex:1;">'+r.name+(r.set?' &middot; '+r.set:'')+(r.number?' #'+r.number:'')+'</span><i class="ti ti-chevron-right" style="font-size:14px;color:var(--muted);"></i></div>';
-    });
     h+='</div>';
+  } else {
+    h+='<div class="note" style="color:var(--red2);border-color:rgba(239,68,68,.3);">No graded slab eBay sales found for this card yet.</div>';
   }
 
+  h+=altResults(d.all_results, true);
   E('c-result').innerHTML=h; S('c-result');
 }
 
 function fetchById(id, isSlab){
   S('b-loading');
-  fetch(NETLIFY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({search:'id:'+id,set:'',num:'',company:'',grade:''})})
+  fetch(NETLIFY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({search:id,set:''})})
   .then(function(r){return r.json();})
   .then(function(d){H('b-loading');if(d.error)throw new Error(d.error);lastData=d;isSlab?renderSlab(d,'',''):renderComp(d,'NEAR_MINT');})
   .catch(function(e){H('b-loading');E('c-err').textContent='Error: '+e.message;S('c-err');});
